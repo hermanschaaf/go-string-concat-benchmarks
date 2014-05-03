@@ -1,3 +1,5 @@
+// Package stringconcat exists only to provide benchmarks for the different approaches
+// to string concatenation in Go.
 package stringconcat
 
 import (
