@@ -30,6 +30,9 @@ var global string
 // set up the array that is appended is not counted towards the
 // time for naive concatenation.
 func benchmarkNaiveConcat(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
 	var ns string
 	for i := 0; i < b.N; i++ {
 		next := nextString()
@@ -65,6 +68,9 @@ func BenchmarkNaiveConcat10000(b *testing.B) {
 // up an array with strings, and calling strings.Join on that array
 // to get a fully concatenated string.
 func benchmarkJoin(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
 	var ns string
 	for i := 0; i < b.N; i++ {
 		next := nextString()
@@ -95,6 +101,9 @@ func BenchmarkJoin10000(b *testing.B) {
 
 // benchmarkBufferString
 func benchmarkBufferString(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
 	var ns string
 	for i := 0; i < b.N; i++ {
 		next := nextString()
