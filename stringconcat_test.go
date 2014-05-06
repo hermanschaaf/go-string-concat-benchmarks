@@ -64,7 +64,13 @@ func BenchmarkNaiveConcat10000(b *testing.B) {
 	benchmarkNaiveConcat(b, 10000)
 }
 
+// benchmarkByteSlice provides a benchmark for the time it takes
+// to repeatedly append returned strings to a byte slice, and
+// finally casting the byte slice to string type.
 func benchmarkByteSlice(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
 	var ns string
 	for i := 0; i < b.N; i++ {
 		next := nextString()
