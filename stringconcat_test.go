@@ -64,6 +64,35 @@ func BenchmarkNaiveConcat10000(b *testing.B) {
 	benchmarkNaiveConcat(b, 10000)
 }
 
+func benchmarkByteSlice(b *testing.B, numConcat int) {
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		b := []byte{}
+		for u := 0; u < numConcat; u++ {
+			b = append(b, []byte(next())...)
+		}
+		ns = string(b)
+	}
+	global = ns
+}
+
+func BenchmarkByteSlice10(b *testing.B) {
+	benchmarkByteSlice(b, 10)
+}
+
+func BenchmarkByteSlice100(b *testing.B) {
+	benchmarkByteSlice(b, 100)
+}
+
+func BenchmarkByteSlice1000(b *testing.B) {
+	benchmarkByteSlice(b, 1000)
+}
+
+func BenchmarkByteSlice10000(b *testing.B) {
+	benchmarkByteSlice(b, 10000)
+}
+
 // benchmarkJoin provides a benchmark for the time it takes to set
 // up an array with strings, and calling strings.Join on that array
 // to get a fully concatenated string.
