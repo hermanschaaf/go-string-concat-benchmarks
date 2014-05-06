@@ -7,7 +7,11 @@ There is also a [blog post detailing the methodology and results](http://herman.
 
 In summary, for very few concatenations of short strings (fewer than hundred, length shorter than 10) using naive string appending is just fine. For more heavy-duty cases where efficiency is important, bytes.Buffer is the best choice out of the methods evaluated. strings.Join is a good choice when you already have a string slice that just needs to be concatenated into one string.
 
-Here are the raw results:
+Here are how the methods tested stack up:
+
+![Comparison of string concatenation methods in Go](http://img.svbtle.com/rlmmrxjtthkg.png)
+
+And here are the raw results (also including a benchmark for byte slices):
 
 ```
 BenchmarkNaiveConcat10	  500000	      6738 ns/op	     442 B/op	      21 allocs/op
