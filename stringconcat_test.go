@@ -167,7 +167,7 @@ func BenchmarkBufferString10000(b *testing.B) {
 	benchmarkBufferString(b, 10000)
 }
 
-const maxDigitCount = 6
+const maxDigitCount = 20
 
 type catTest struct {
 	in  int
@@ -235,7 +235,7 @@ func benchmarkSliceStringA(b *testing.B, numConcat int) {
 	var ns string
 	for i := 0; i < b.N; i++ {
 		next := nextString()
-		buf := make([]byte, numConcat*maxDigitCount)
+		buf := make([]byte, 0, numConcat*maxDigitCount)
 		for u := 0; u < numConcat; u++ {
 			buf = append(buf, next()...)
 		}
