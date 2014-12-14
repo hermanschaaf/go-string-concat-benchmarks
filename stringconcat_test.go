@@ -134,6 +134,45 @@ func BenchmarkJoin10000(b *testing.B) {
 	benchmarkJoin(b, 10000)
 }
 
+// benchmarkJoinSize provides a benchmark for the time it takes to set
+// up an array with strings, and calling strings.Join on that array
+// to get a fully concatenated string – when the (approximate) number of
+// strings is known in advance.
+//
+// This is identical to benchmarkJoin, except numConcat is used to size
+// the []string slice's initial capacity to avoid needless reallocation.
+func benchmarkJoinSize(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		a := make([]string, 0, numConcat)
+		for u := 0; u < numConcat; u++ {
+			a = append(a, next())
+		}
+		ns = strings.Join(a, "")
+	}
+	global = ns
+}
+
+func BenchmarkJoinSize10(b *testing.B) {
+	benchmarkJoinSize(b, 10)
+}
+
+func BenchmarkJoinSize100(b *testing.B) {
+	benchmarkJoinSize(b, 100)
+}
+
+func BenchmarkJoinSize1000(b *testing.B) {
+	benchmarkJoinSize(b, 1000)
+}
+
+func BenchmarkJoinSize10000(b *testing.B) {
+	benchmarkJoinSize(b, 10000)
+}
+
 // benchmarkBufferString
 func benchmarkBufferString(b *testing.B, numConcat int) {
 	// Reports memory allocations
