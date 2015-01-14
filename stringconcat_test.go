@@ -76,7 +76,7 @@ func benchmarkByteSlice(b *testing.B, numConcat int) {
 		next := nextString()
 		b := []byte{}
 		for u := 0; u < numConcat; u++ {
-			b = append(b, []byte(next())...)
+			b = append(b, next()...)
 		}
 		ns = string(b)
 	}
