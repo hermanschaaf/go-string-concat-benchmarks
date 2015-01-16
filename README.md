@@ -11,23 +11,31 @@ Here are how the methods tested stack up:
 
 ![Comparison of string concatenation methods in Go](http://img.svbtle.com/rlmmrxjtthkg.png)
 
-And here are the raw results (also including a benchmark for byte slices):
-
+Here is updated benchmark on dlintw's slow machine with corrected byte slices code:
 ```
-BenchmarkNaiveConcat10	  500000	      6738 ns/op	     442 B/op	      21 allocs/op
-BenchmarkNaiveConcat100	   10000	    115895 ns/op	   27736 B/op	     201 allocs/op
-BenchmarkNaiveConcat1000	     500	   4802280 ns/op	 2684216 B/op	    2001 allocs/op
-BenchmarkNaiveConcat10000	       5	 272311728 ns/op	264645752 B/op	   20001 allocs/op
-BenchmarkByteSlice10	  200000	      8674 ns/op	     432 B/op	      28 allocs/op
-BenchmarkByteSlice100	   50000	     62424 ns/op	    3440 B/op	     211 allocs/op
-BenchmarkByteSlice1000	    5000	    607276 ns/op	   48688 B/op	    2019 allocs/op
-BenchmarkByteSlice10000	     500	   5697016 ns/op	  509104 B/op	   20029 allocs/op
-BenchmarkJoin10	  200000	      8750 ns/op	     740 B/op	      19 allocs/op
-BenchmarkJoin100	   50000	     56398 ns/op	    6018 B/op	     113 allocs/op
-BenchmarkJoin1000	    5000	    484793 ns/op	   51304 B/op	    1018 allocs/op
-BenchmarkJoin10000	     500	   5896195 ns/op	 1112755 B/op	   10032 allocs/op
-BenchmarkBufferString10	  200000	      9120 ns/op	     433 B/op	      18 allocs/op
-BenchmarkBufferString100	   50000	     49411 ns/op	    2720 B/op	     111 allocs/op
-BenchmarkBufferString1000	    5000	    422961 ns/op	   23488 B/op	    1014 allocs/op
-BenchmarkBufferString10000	     500	   3842033 ns/op	  297216 B/op	   10018 allocs/op
+BenchmarkNaiveConcat10	  200000	      9274 ns/op	     408 B/op	      14 allocs/op
+BenchmarkNaiveConcat100	   10000	    178076 ns/op	   26936 B/op	     134 allocs/op
+BenchmarkNaiveConcat1000	     100	  10297768 ns/op	 2699773 B/op	    1338 allocs/op
+BenchmarkNaiveConcat10000	       2	 551974966 ns/op	271742592 B/op	   13674 allocs/op
+BenchmarkByteSlice10	  200000	     10153 ns/op	     360 B/op	      16 allocs/op
+BenchmarkByteSlice100	   20000	     81188 ns/op	    3144 B/op	     109 allocs/op
+BenchmarkByteSlice1000	    2000	    810570 ns/op	   42121 B/op	    1015 allocs/op
+BenchmarkByteSlice10000	     500	   6158915 ns/op	  443656 B/op	   10023 allocs/op
+BenchmarkJoin10	  200000	     10440 ns/op	     455 B/op	      12 allocs/op
+BenchmarkJoin100	   50000	     71594 ns/op	    3655 B/op	      45 allocs/op
+BenchmarkJoin1000	    5000	    645059 ns/op	   32770 B/op	     350 allocs/op
+BenchmarkJoin10000	     500	   6996372 ns/op	  554619 B/op	    3366 allocs/op
+BenchmarkBufferString10	  200000	      9947 ns/op	     433 B/op	      10 allocs/op
+BenchmarkBufferString100	   50000	     68339 ns/op	    2880 B/op	      43 allocs/op
+BenchmarkBufferString1000	    5000	    605385 ns/op	   24194 B/op	     346 allocs/op
+BenchmarkBufferString10000	     500	   4459925 ns/op	  223501 B/op	    3350 allocs/op
+BenchmarkSliceString10	  500000	      6480 ns/op	     256 B/op	       9 allocs/op
+BenchmarkSliceString100	   50000	     59868 ns/op	    2080 B/op	      42 allocs/op
+BenchmarkSliceString1000	    5000	    586186 ns/op	   31458 B/op	     348 allocs/op
+BenchmarkSliceString10000	     500	   4651593 ns/op	  337000 B/op	    3357 allocs/op
+BenchmarkSliceStringA10	  200000	      6878 ns/op	     344 B/op	       7 allocs/op
+BenchmarkSliceStringA100	   50000	     60004 ns/op	    3112 B/op	      37 allocs/op
+BenchmarkSliceStringA1000	    5000	    561599 ns/op	   31208 B/op	     337 allocs/op
+BenchmarkSliceStringA10000	     500	   4205116 ns/op	  315496 B/op	    3337 allocs/op
+ok  	_/home/dlin/tmp/go-string-concat-benchmarks	65.784s
 ```

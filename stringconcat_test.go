@@ -205,3 +205,92 @@ func BenchmarkBufferString1000(b *testing.B) {
 func BenchmarkBufferString10000(b *testing.B) {
 	benchmarkBufferString(b, 10000)
 }
+
+const maxDigitCount = 20
+
+type catTest struct {
+	in  int
+	out string
+}
+
+var cattests = []catTest{
+	{0, ""},
+	{1, "10001"},
+	{2, "1000110002"},
+	{9, "100011000210003100041000510006100071000810009"},
+}
+
+func catSlice(n int) string {
+	next := nextString()
+	var buf []byte
+	//buf := make([]byte, n*maxDigitCount)
+	for u := 0; u < n; u++ {
+		buf = append(buf, next()...)
+	}
+	return string(buf[:])
+}
+
+func TestSliceString(t *testing.T) {
+	for _, tt := range cattests {
+		if out := catSlice(tt.in); out != tt.out {
+			t.Errorf("catSlice(%d) = %s, want %s", tt.in, out, tt.out)
+		}
+	}
+}
+
+// benchmarkSliceString
+func benchmarkSliceString(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		//buffer := make([]byte, numConcat*maxDigitCount)
+		var buffer []byte
+		for u := 0; u < numConcat; u++ {
+			buffer = append(buffer, next()...)
+		}
+		ns = string(buffer[:])
+	}
+	global = ns
+}
+func BenchmarkSliceString10(b *testing.B) {
+	benchmarkSliceString(b, 10)
+}
+func BenchmarkSliceString100(b *testing.B) {
+	benchmarkSliceString(b, 100)
+}
+func BenchmarkSliceString1000(b *testing.B) {
+	benchmarkSliceString(b, 1000)
+}
+func BenchmarkSliceString10000(b *testing.B) {
+	benchmarkSliceString(b, 10000)
+}
+
+// benchmarkSliceStringA
+func benchmarkSliceStringA(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		buf := make([]byte, 0, numConcat*maxDigitCount)
+		for u := 0; u < numConcat; u++ {
+			buf = append(buf, next()...)
+		}
+		ns = string(buf[:])
+	}
+	global = ns
+}
+func BenchmarkSliceStringA10(b *testing.B) {
+	benchmarkSliceStringA(b, 10)
+}
+func BenchmarkSliceStringA100(b *testing.B) {
+	benchmarkSliceStringA(b, 100)
+}
+func BenchmarkSliceStringA1000(b *testing.B) {
+	benchmarkSliceStringA(b, 1000)
+}
+func BenchmarkSliceStringA10000(b *testing.B) {
+	benchmarkSliceStringA(b, 10000)
+}
