@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-var s []string = []string{}
+var s = []string{}
 
 // nextString is an iterator we use to represent a process
 // that returns strings that we want to concatenate in order.
@@ -17,7 +17,7 @@ func nextString() func() string {
 	n := 10000
 	// closure captures variable n
 	return func() string {
-		n += 1
+		n++
 		return strconv.Itoa(n)
 	}
 }
@@ -204,4 +204,38 @@ func BenchmarkBufferString1000(b *testing.B) {
 
 func BenchmarkBufferString10000(b *testing.B) {
 	benchmarkBufferString(b, 10000)
+}
+
+// benchmarkBufferString
+func benchmarkBuffer(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		var buffer bytes.Buffer
+		buffer.Grow(numConcat)
+		for u := 0; u < numConcat; u++ {
+			buffer.WriteString(next())
+		}
+		ns = buffer.String()
+	}
+	global = ns
+}
+
+func BenchmarkBuffer10(b *testing.B) {
+	benchmarkBuffer(b, 10)
+}
+
+func BenchmarkBuffer100(b *testing.B) {
+	benchmarkBuffer(b, 100)
+}
+
+func BenchmarkBuffer1000(b *testing.B) {
+	benchmarkBuffer(b, 1000)
+}
+
+func BenchmarkBuffer10000(b *testing.B) {
+	benchmarkBuffer(b, 10000)
 }
