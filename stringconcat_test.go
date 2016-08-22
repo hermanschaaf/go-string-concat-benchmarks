@@ -10,15 +10,23 @@ import (
 )
 
 var s []string = []string{}
+var junk map[int]string
+
+func init() {
+	junk = make(map[int]string)
+	for i := 0; i < 10000; i++ {
+		junk[i] = strconv.Itoa(i + 10000)
+	}
+}
 
 // nextString is an iterator we use to represent a process
 // that returns strings that we want to concatenate in order.
 func nextString() func() string {
-	n := 10000
+	n := 0
 	// closure captures variable n
 	return func() string {
 		n += 1
-		return strconv.Itoa(n)
+		return junk[n]
 	}
 }
 
@@ -97,6 +105,41 @@ func BenchmarkByteSlice1000(b *testing.B) {
 
 func BenchmarkByteSlice10000(b *testing.B) {
 	benchmarkByteSlice(b, 10000)
+}
+
+// benchmarkByteSlice provides a benchmark for the time it takes
+// to repeatedly append returned strings to a byte slice, and
+// finally casting the byte slice to string type.
+func benchmarkByteSliceSize(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		b := make([]byte, 0, numConcat*10)
+		for u := 0; u < numConcat; u++ {
+			b = append(b, next()...)
+		}
+		ns = string(b)
+	}
+	global = ns
+}
+
+func BenchmarkByteSliceSize10(b *testing.B) {
+	benchmarkByteSliceSize(b, 10)
+}
+
+func BenchmarkByteSliceSize100(b *testing.B) {
+	benchmarkByteSliceSize(b, 100)
+}
+
+func BenchmarkByteSliceSize1000(b *testing.B) {
+	benchmarkByteSliceSize(b, 1000)
+}
+
+func BenchmarkByteSliceSize10000(b *testing.B) {
+	benchmarkByteSliceSize(b, 10000)
 }
 
 // benchmarkJoin provides a benchmark for the time it takes to set
@@ -204,4 +247,36 @@ func BenchmarkBufferString1000(b *testing.B) {
 
 func BenchmarkBufferString10000(b *testing.B) {
 	benchmarkBufferString(b, 10000)
+}
+
+func benchmarkBufferSize(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		buffer := bytes.NewBuffer(make([]byte, 0, numConcat*10))
+		for u := 0; u < numConcat; u++ {
+			buffer.WriteString(next())
+		}
+		ns = buffer.String()
+	}
+	global = ns
+}
+
+func BenchmarkBufferSize10(b *testing.B) {
+	benchmarkBufferSize(b, 10)
+}
+
+func BenchmarkBufferSize100(b *testing.B) {
+	benchmarkBufferSize(b, 100)
+}
+
+func BenchmarkBufferSize1000(b *testing.B) {
+	benchmarkBufferSize(b, 1000)
+}
+
+func BenchmarkBufferSize10000(b *testing.B) {
+	benchmarkBufferSize(b, 10000)
 }
