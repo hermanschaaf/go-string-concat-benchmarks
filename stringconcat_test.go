@@ -4,6 +4,7 @@ package stringconcat
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 	"strings"
 	"testing"
@@ -279,4 +280,37 @@ func BenchmarkBufferSize1000(b *testing.B) {
 
 func BenchmarkBufferSize10000(b *testing.B) {
 	benchmarkBufferSize(b, 10000)
+}
+
+// benchmarkFmtSprintf
+func benchmarkFmtSprintf(b *testing.B, numConcat int) {
+	// Reports memory allocations
+	b.ReportAllocs()
+
+	var ns string
+	for i := 0; i < b.N; i++ {
+		next := nextString()
+		ns = ""
+		for u := 0; u < numConcat; u++ {
+			ns = fmt.Sprintf("%s %s", ns, next())
+		}
+	}
+
+	global = ns
+}
+
+func BenchmarkFmtSprintf10(b *testing.B) {
+	benchmarkFmtSprintf(b, 10)
+}
+
+func BenchmarkFmtSprintf100(b *testing.B) {
+	benchmarkFmtSprintf(b, 100)
+}
+
+func BenchmarkFmtSprintf1000(b *testing.B) {
+	benchmarkFmtSprintf(b, 1000)
+}
+
+func BenchmarkFmtSprintf10000(b *testing.B) {
+	benchmarkFmtSprintf(b, 10000)
 }
